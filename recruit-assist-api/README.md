@@ -2,7 +2,25 @@
 
 ### Install & run
 ```bash
+# Install dependencies (including dev dependencies for testing)
+pip install -e ".[dev]"
+
+# Run the server
 uvicorn app.main:app --reload
+```
+
+### Running tests
+```bash
+# From project root
+pip install -e ".[dev]"
+pytest
+
+# For coverage
+pytest --cov=app --cov-report=term-missing
+
+# In Docker (optional quick check)
+docker build -t recruit-assist-api:dev .
+docker run --rm -it recruit-assist-api:dev pytest
 ```
 
 ## Endpoints
