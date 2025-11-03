@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Generates personalised connection notes and JD follow-ups, then inserts them into LinkedIn composers (you click Send).",
   "icons": { "128": "public/icon128.png" },
-  "permissions": [],
+  "permissions": ["storage"],
   "host_permissions": ["https://www.linkedin.com/*"],
   "content_scripts": [
     {

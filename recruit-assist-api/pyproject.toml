@@ -1,0 +1,19 @@
+[project]
+name = "recruit-assist-api"
+version = "0.1.0"
+description = "FastAPI skeleton for CV ingest, JD normalization, and endorsement generation."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "pydantic>=2.7.0",
+  "python-multipart>=0.0.9"
+]
+
+[tool.uvicorn]
+factory = false
+host = "0.0.0.0"
+port = 8000
+reload = true
+

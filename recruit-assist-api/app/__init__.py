@@ -1,0 +1,2 @@
+"""Recruit Assist API application."""
+

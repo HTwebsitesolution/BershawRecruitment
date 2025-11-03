@@ -42,13 +42,18 @@ export default function DraftButton() {
     setSuggestions(generateHypotheticalNotes({ firstName: "there" }));
   }, []);
 
+  // IMPORTANT: All text insertion is user-initiated via button clicks only.
+  // This ensures compliance with LinkedIn's policies - we never auto-insert text.
   const insert = (text: string) => {
     const el = getActiveComposer();
     if (!el) {
       alert("Composer not found. Click into a LinkedIn message box and try again.");
       return;
     }
-    insertTextIntoComposer(el, text);
+    const success = insertTextIntoComposer(el, text);
+    if (!success) {
+      alert("Failed to insert text. Please try again.");
+    }
     setOpen(false);
   };
 

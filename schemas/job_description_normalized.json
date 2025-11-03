@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://example.com/schemas/job_description_normalized.json",
   "title": "JobDescriptionNormalized",
+  "version": "jdx-1.0.0",
   "type": "object",
   "additionalProperties": false,
   "required": ["job", "requirements"],
