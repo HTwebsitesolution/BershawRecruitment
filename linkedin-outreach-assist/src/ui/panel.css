@@ -1,0 +1,57 @@
+:host, .li-assist-root { all: initial; }
+.li-assist-launcher {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.li-assist-btn {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  box-shadow: 0 2px 10px rgba(0,0,0,.12);
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+.li-assist-panel {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  width: 360px;
+  max-height: 70vh;
+  overflow: auto;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  padding: 12px;
+}
+.li-assist-panel h4 { margin: 6px 0 8px; font-size: 14px; }
+.li-assist-suggestion {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.li-assist-insert {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+}
+.li-assist-status {
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+}
+
+

@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/schemas/job_description_normalized.json",
+  "title": "JobDescriptionNormalized",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["job", "requirements"],
+  "properties": {
+    "job": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "client", "location_policy"],
+      "properties": {
+        "title": { "type": "string" },
+        "client": { "type": "string" },
+        "department": { "type": "string" },
+        "location_policy": { "type": "string", "enum": ["onsite", "hybrid", "remote"] },
+        "onsite_days_per_week": { "type": ["integer", "null"], "minimum": 0, "maximum": 5 },
+        "primary_location": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "city": { "type": "string" },
+            "region": { "type": "string" },
+            "country": { "type": "string" }
+          }
+        },
+        "salary_band": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "min": { "type": ["number", "null"] },
+            "max": { "type": ["number", "null"] },
+            "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+            "period": { "type": "string", "enum": ["year", "month"] }
+          }
+        },
+        "visa_sponsorship": { "type": ["string", "null"], "enum": ["available", "not_available", "case_by_case", null] },
+        "clearance_required": { "type": ["string", "null"] },
+        "hiring_urgency": { "type": ["string", "null"], "enum": ["asap", "this_quarter", "next_quarter", null] }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["must_haves", "nice_to_haves"],
+      "properties": {
+        "must_haves": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "weight": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.1 },
+              "evidence_hint": { "type": "string" }
+            }
+          }
+        },
+        "nice_to_haves": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "weight": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.05 }
+            }
+          }
+        },
+        "years_experience_min": { "type": ["integer", "null"], "minimum": 0 },
+        "education_required": { "type": ["string", "null"] }
+      }
+    },
+    "interview_process": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["stage_name"],
+        "properties": {
+          "stage_name": { "type": "string" },
+          "duration_minutes": { "type": ["integer", "null"] },
+          "participants": { "type": "array", "items": { "type": "string" } },
+          "assessment_focus": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "role_notes": { "type": "string" }
+  },
+  "examples": [
+    {
+      "job": {
+        "title": "Senior Backend Engineer",
+        "client": "RetailTech Ltd",
+        "department": "Engineering",
+        "location_policy": "hybrid",
+        "onsite_days_per_week": 2,
+        "primary_location": { "city": "Manchester", "country": "UK" },
+        "salary_band": { "min": 85000, "max": 95000, "currency": "GBP", "period": "year" },
+        "visa_sponsorship": "case_by_case",
+        "hiring_urgency": "this_quarter"
+      },
+      "requirements": {
+        "must_haves": [
+          { "name": "Node.js & TypeScript", "weight": 0.25 },
+          { "name": "AWS (Lambda/ECS/RDS)", "weight": 0.25 },
+          { "name": "SQL & data modelling", "weight": 0.15 }
+        ],
+        "nice_to_haves": [
+          { "name": "Kafka/event-driven" },
+          { "name": "Kubernetes" }
+        ],
+        "years_experience_min": 5
+      },
+      "interview_process": [
+        { "stage_name": "Tech screen", "duration_minutes": 60, "participants": ["Senior Engineer"], "assessment_focus": "APIs, SQL, design" },
+        { "stage_name": "Panel", "duration_minutes": 90, "participants": ["EM", "PM"], "assessment_focus": "architecture, impact" }
+      ],
+      "role_notes": "Priority hire for payments team."
+    }
+  ]
+}
+

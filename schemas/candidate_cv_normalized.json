@@ -1,0 +1,209 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/schemas/candidate_cv_normalized.json",
+  "title": "CandidateCVNormalized",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["candidate", "experience", "skills"],
+  "properties": {
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_name"],
+      "properties": {
+        "full_name": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "linkedin_url": { "type": "string", "format": "uri" },
+        "location": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "city": { "type": "string" },
+            "region": { "type": "string" },
+            "country": { "type": "string" },
+            "remote_preference": {
+              "type": "string",
+              "enum": ["remote", "hybrid", "onsite", "unspecified"]
+            }
+          }
+        },
+        "right_to_work": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "e.g., 'UK', 'EU', 'US', 'Visa sponsorship required'"
+        },
+        "notice_period_weeks": { "type": ["integer", "null"], "minimum": 0 },
+        "availability_date": { "type": ["string", "null"], "format": "date" },
+        "current_compensation": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "base_amount": { "type": "number" },
+            "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+            "period": { "type": "string", "enum": ["year", "month"] },
+            "bonus_ote": { "type": ["number", "null"] },
+            "equity": { "type": ["string", "null"] }
+          }
+        },
+        "target_compensation": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "base_min": { "type": ["number", "null"] },
+            "base_max": { "type": ["number", "null"] },
+            "currency": { "type": "string", "minLength": 3, "maxLength": 3 },
+            "period": { "type": "string", "enum": ["year", "month"] }
+          }
+        }
+      }
+    },
+    "experience": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "employer", "start_date"],
+        "properties": {
+          "title": { "type": "string" },
+          "employer": { "type": "string" },
+          "location": { "type": "string" },
+          "start_date": { "type": "string", "pattern": "^(\\d{4})-(\\d{2})$" },
+          "end_date": {
+            "type": ["string", "null"],
+            "pattern": "^(\\d{4})-(\\d{2})$"
+          },
+          "is_current": { "type": "boolean", "default": false },
+          "responsibilities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "achievements": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "technologies": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "team_size": { "type": ["integer", "null"], "minimum": 0 }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["tech", "sales", "analytics", "management", "language", "other"]
+          },
+          "level": {
+            "type": "string",
+            "enum": ["novice", "intermediate", "advanced", "expert"],
+            "default": "intermediate"
+          },
+          "evidence": {
+            "type": "array",
+            "description": "Verbatim lines/phrases from the CV supporting this skill.",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "education": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "institution": { "type": "string" },
+          "degree": { "type": "string" },
+          "field": { "type": "string" },
+          "start_year": { "type": ["integer", "null"] },
+          "end_year": { "type": ["integer", "null"] }
+        }
+      }
+    },
+    "certifications": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "proficiency": {
+            "type": "string",
+            "enum": ["basic", "conversational", "fluent", "native"]
+          }
+        }
+      }
+    },
+    "documents": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "resume_url": { "type": "string", "format": "uri" },
+        "cover_letter_url": { "type": "string", "format": "uri" }
+      }
+    },
+    "extraction_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string", "enum": ["pdf", "docx", "linkedin", "text", "other"] },
+        "extracted_at": { "type": "string", "format": "date-time" },
+        "parser_version": { "type": "string" }
+      }
+    }
+  },
+  "examples": [
+    {
+      "candidate": {
+        "full_name": "Alex Morgan",
+        "email": "alex.morgan@example.com",
+        "phone": "+44 7700 900123",
+        "linkedin_url": "https://www.linkedin.com/in/alex-morgan",
+        "location": { "city": "Leeds", "country": "UK", "remote_preference": "hybrid" },
+        "right_to_work": ["UK"],
+        "notice_period_weeks": 4,
+        "current_compensation": { "base_amount": 78000, "currency": "GBP", "period": "year" },
+        "target_compensation": { "base_min": 85000, "base_max": 92000, "currency": "GBP", "period": "year" }
+      },
+      "experience": [
+        {
+          "title": "Senior Backend Engineer",
+          "employer": "FintechCo",
+          "location": "Leeds",
+          "start_date": "2021-03",
+          "end_date": null,
+          "is_current": true,
+          "responsibilities": ["Design REST APIs", "Own on-call rota"],
+          "achievements": ["Reduced p95 latency by 40%"],
+          "technologies": ["Node.js", "TypeScript", "Postgres", "AWS ECS"],
+          "team_size": 3
+        }
+      ],
+      "skills": [
+        { "name": "Node.js", "category": "tech", "level": "expert", "evidence": ["Built high-throughput APIs at FintechCo"] },
+        { "name": "AWS", "category": "tech", "level": "advanced" }
+      ],
+      "education": [],
+      "certifications": ["AWS Solutions Architect Associate"],
+      "languages": [{ "name": "English", "proficiency": "native" }],
+      "documents": { "resume_url": "https://files.example.com/resumes/alex.pdf" },
+      "extraction_meta": { "source": "pdf", "extracted_at": "2025-11-03T12:00:00Z", "parser_version": "cvx-1.2.0" }
+    }
+  ]
+}
+
