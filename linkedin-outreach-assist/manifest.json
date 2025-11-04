@@ -3,7 +3,7 @@
   "name": "LinkedIn Outreach Assist",
   "version": "0.1.0",
   "description": "Generates personalised connection notes and JD follow-ups, then inserts them into LinkedIn composers (you click Send).",
-  "icons": { "128": "public/icon128.png" },
+
   "permissions": ["storage"],
   "host_permissions": [
     "https://www.linkedin.com/*",
@@ -18,7 +18,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["dist/contentScript.js", "public/icon128.png"],
+      "resources": ["dist/contentScript.js"],
       "matches": ["https://www.linkedin.com/*"]
     }
   ]

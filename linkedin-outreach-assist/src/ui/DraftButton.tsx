@@ -23,7 +23,7 @@ function generateHypotheticalNotes(candidate: {
     {
       id: "s2",
       label: "Role-led pitch",
-      text: `${fn}, I'm filling a ${role} that lines up with your ${skill}. If you're open, send over your CV and I'll forward the JD for a quick look.`
+      text: `Hi ${fn}, I'm filling a ${role} that lines up with your ${skill}. If you're open, send over your CV and I'll forward the JD for a quick look.`
     },
     {
       id: "s3",
@@ -91,8 +91,14 @@ export default function DraftButton() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Pre-load with fallback suggestions
-    setSuggestions(generateHypotheticalNotes({ firstName: "there" }));
+    // Pre-load with fallback suggestions using extracted candidate info
+    const candidateInfo = extractCandidateInfo();
+    setSuggestions(generateHypotheticalNotes({
+      firstName: candidateInfo.first_name,
+      hook: "recent work",
+      role: candidateInfo.role_title,
+      skill: "experience"
+    }));
   }, []);
 
   // IMPORTANT: All text insertion is user-initiated via button clicks only.
