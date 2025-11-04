@@ -27,13 +27,22 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
 - ✅ `BACKEND_INTEGRATION.md` - Integration guide
 
 ### 4. FastAPI Backend
-- ✅ Complete API structure with 3 endpoints:
+- ✅ Complete API structure with endpoints:
   - `POST /ingest/cv` - CV file upload → normalized JSON
-  - `POST /normalize/jd` - Free-text JD → normalized JSON
-  - `POST /endorsement/generate` - CV + JD + Interview → endorsement
+  - `POST /normalize/jd` - Free-text JD → normalized JSON (with `?use_llm=true` for LLM extraction)
+  - `POST /endorsement/generate` - CV + JD + Interview → endorsement (with `?use_llm=true` for LLM generation)
+  - `POST /outreach/draft/connect` - Generate connection messages (with `?mode=llm` for LLM personalization)
+  - `POST /outreach/classify-reply` - Classify candidate replies
+  - `POST /outreach/next-message` - Generate follow-up messages
 - ✅ Pydantic models mirroring JSON schemas
-- ✅ Service stubs (CV parser, JD normalizer, endorsement writer)
+- ✅ LLM services:
+  - ✅ `jd_normalizer_llm.py` - LLM-based JD extraction
+  - ✅ `endorsement_llm.py` - LLM-based endorsement generation
+  - ✅ `outreach_llm.py` - LLM-based outreach personalization
+- ✅ Service stubs (CV parser still stub, JD normalizer has LLM implementation)
 - ✅ Factory pattern app structure
+- ✅ Centralized OpenAI client (`app/services/llm.py`)
+- ✅ Settings management (`app/settings.py`) with `.env` support
 - ✅ CORS middleware configured
 
 ### 5. Testing Infrastructure
@@ -42,9 +51,15 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
   - `test_models.py` - Model validation tests
   - `test_cv_parser.py` - CV parser stub tests
   - `test_jd_normalizer.py` - JD normalizer tests
+  - `test_jd_normalizer_llm.py` - JD normalizer LLM tests
   - `test_endorsement_writer.py` - Endorsement generation tests
+  - `test_endorsement_llm.py` - Endorsement LLM tests
+  - `test_outreach_llm.py` - Outreach LLM tests
+  - `test_golden_endorsements.py` - Golden test data regression tests
+  - `test_borderline_cases.py` - Borderline case and edge case tests
 - ✅ Pytest configuration with coverage support
 - ✅ Dev dependencies configured (pytest, httpx, pytest-cov)
+- ✅ Golden test data fixtures (`app/tests/fixtures/golden_cv_jd_pairs.json`)
 
 ### 6. Documentation
 - ✅ `README.md` - Quick start guide
@@ -57,17 +72,19 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
 ## 📋 Next Steps (When Returning)
 
 ### Priority 1: Backend Implementation
-1. **Replace CV Parser Stub**
+1. ❌ **Replace CV Parser Stub** - **REMAINING**
    - Implement real PDF/DOCX parsing
    - Add PDF parsing library (pdfplumber/pypdf2)
    - Add DOCX parsing library (python-docx)
    - Or implement LLM-based extraction
-   - Add golden CV/JD pairs for regression testing
+   - Validate against CandidateCVNormalized schema
 
-2. **Replace JD Normalizer Stub**
-   - Implement LLM extraction for free-text JDs
-   - Or add rule-based parsing
-   - Validate against schema
+2. ✅ **Replace JD Normalizer Stub** - **COMPLETED**
+   - ✅ Implemented LLM-based extraction (`app/services/jd_normalizer_llm.py`)
+   - ✅ Uses OpenAI JSON mode for structured extraction
+   - ✅ Supports `?use_llm=true` query parameter
+   - ✅ Graceful fallback to rule-based if API key not configured
+   - ✅ Comprehensive tests in `test_jd_normalizer_llm.py`
 
 3. ✅ **Replace Endorsement Writer with LLM** - **COMPLETED**
    - ✅ Load endorsement prompt template from `prompts/endorsement_prompt.txt`
@@ -78,22 +95,25 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
    - ✅ Automatic fallback to rule-based implementation for testing
 
 ### Priority 2: Integration
-4. **Wire Chrome Extension to Backend**
-   - Update `DraftButton.tsx` to call backend API
-   - Add authentication handling
-   - Implement error handling with fallbacks
-   - Test end-to-end flow
+4. ✅ **Wire Chrome Extension to Backend** - **COMPLETED**
+   - ✅ Updated `DraftButton.tsx` to call backend API
+   - ✅ Implemented error handling with fallbacks to hypothetical notes
+   - ✅ Dynamic candidate information extraction (first name, role, location)
+   - ✅ End-to-end flow tested and working
+   - ⚠️ **Remaining**: Add authentication handling (API key/token management)
 
 ### Priority 3: Testing & Quality
-5. **Add Golden Test Data**
-   - Create `app/tests/fixtures/golden_cv_jd_pairs.json`
-   - Add regression tests for known CV/JD combinations
-   - Test borderline cases (many △ vs few ✔)
+5. ✅ **Add Golden Test Data** - **COMPLETED**
+   - ✅ Created `app/tests/fixtures/golden_cv_jd_pairs.json` with 6 test scenarios
+   - ✅ Added regression tests in `test_golden_endorsements.py`
+   - ✅ Covers perfect matches, borderline cases, and rejection scenarios
+   - ✅ Includes documentation in `fixtures/README.md`
 
-6. **Add Borderline Case Tests**
-   - Test recommendation logic for edge cases
-   - Verify evidence requirements
-   - Test format compliance
+6. ✅ **Add Borderline Case Tests** - **COMPLETED**
+   - ✅ Created `test_borderline_cases.py` with 10 comprehensive edge case tests
+   - ✅ Tests recommendation logic (Proceed/Hold/Reject)
+   - ✅ Verifies evidence requirements
+   - ✅ Tests format compliance and edge cases (empty interviews, salary mismatches, etc.)
 
 ### Priority 4: Production Readiness
 7. **Security & Authentication**
@@ -167,12 +187,14 @@ npm run build
 
 ## 📝 Important Notes
 
-- **CV Parser**: Currently a stub returning mock data. Replace with real parser.
-- **JD Normalizer**: Currently a stub with defaults. Replace with LLM extraction.
-- **Endorsement Writer**: ✅ **LLM-based implementation complete!** Uses OpenAI API with automatic fallback to rule-based if `OPENAI_API_KEY` is not set. See `recruit-assist-api/README.md` for environment variable setup.
+- **CV Parser**: ⚠️ **Still a stub** returning mock data. Replace with real PDF/DOCX parsing or LLM-based extraction.
+- **JD Normalizer**: ✅ **LLM-based implementation complete!** Use `?use_llm=true` to enable LLM extraction. Falls back to rule-based if `OPENAI_API_KEY` not set.
+- **Endorsement Writer**: ✅ **LLM-based implementation complete!** Use `?use_llm=true` to enable LLM generation. Uses OpenAI API with automatic fallback to rule-based if `OPENAI_API_KEY` is not set. See `recruit-assist-api/README.md` for environment variable setup.
+- **Chrome Extension**: ✅ **Wired to backend API!** Extension calls backend endpoints for message generation. Error handling with fallbacks implemented.
+- **Golden Test Data**: ✅ **Complete!** 6 test scenarios in `app/tests/fixtures/golden_cv_jd_pairs.json` with comprehensive regression tests.
+- **Borderline Tests**: ✅ **Complete!** 10 edge case tests covering recommendation logic, evidence requirements, and format compliance.
 - **CORS**: Currently open (`allow_origins=["*"]`). Tighten before production.
-- **Authentication**: Not implemented yet. Add before exposing outside localhost.
-- **Tests**: Test suite covers stubs. Add golden pairs when implementing real parsers.
+- **Authentication**: ⚠️ **Not implemented yet.** Add API key/token management before exposing outside localhost.
 
 ## 🎯 Current Commit
 
@@ -182,6 +204,10 @@ npm run build
 
 ---
 
-**Last Updated**: November 3, 2025
-**Status**: Backend foundation complete, ready for implementation phase
+**Last Updated**: November 4, 2025
+**Status**: 
+- ✅ Priority 1 (Backend): JD Normalizer LLM ✅, Endorsement Writer LLM ✅, CV Parser ⚠️ (stub remains)
+- ✅ Priority 2 (Integration): Chrome Extension wired to Backend ✅
+- ✅ Priority 3 (Testing): Golden test data ✅, Borderline case tests ✅
+- ⚠️ Priority 4 (Production): Security/Auth, Infrastructure - Not started
 

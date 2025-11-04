@@ -1,0 +1,396 @@
+{
+  "golden_pairs": [
+    {
+      "name": "perfect_match_backend_engineer",
+      "description": "Strong candidate with all must-haves met - should recommend Proceed",
+      "cv": {
+        "candidate": {
+          "full_name": "Sarah Chen",
+          "email": "sarah.chen@example.com",
+          "location": {
+            "city": "London",
+            "country": "UK",
+            "remote_preference": "hybrid"
+          },
+          "right_to_work": ["UK"]
+        },
+        "experience": [
+          {
+            "title": "Senior Backend Engineer",
+            "employer": "FintechCo",
+            "start_date": "2020-01",
+            "is_current": true,
+            "technologies": ["Node.js", "TypeScript", "Postgres", "AWS ECS", "AWS Lambda", "AWS RDS"],
+            "achievements": [
+              "Reduced p95 latency by 40%",
+              "Built high-throughput REST APIs handling 10k+ req/sec",
+              "Owned CI/CD pipelines for microservices"
+            ],
+            "responsibilities": [
+              "Design and implement REST APIs",
+              "Manage AWS infrastructure (ECS, RDS, Lambda)",
+              "Lead code reviews and mentoring"
+            ],
+            "team_size": 5
+          }
+        ],
+        "skills": [
+          {"name": "Node.js", "category": "tech", "level": "expert"},
+          {"name": "TypeScript", "category": "tech", "level": "expert"},
+          {"name": "AWS", "category": "tech", "level": "advanced"},
+          {"name": "PostgreSQL", "category": "tech", "level": "advanced"},
+          {"name": "CI/CD", "category": "tech", "level": "advanced"}
+        ]
+      },
+      "jd": {
+        "job": {
+          "title": "Senior Backend Engineer",
+          "client": "RetailTech Ltd",
+          "department": "Engineering",
+          "location_policy": "hybrid",
+          "primary_location": {
+            "city": "London",
+            "country": "UK"
+          },
+          "salary_band": {
+            "min": 85000,
+            "max": 95000,
+            "currency": "GBP",
+            "period": "year"
+          }
+        },
+        "requirements": {
+          "must_haves": [
+            {"name": "Node.js & TypeScript", "weight": 0.3},
+            {"name": "AWS (Lambda/ECS/RDS)", "weight": 0.25},
+            {"name": "SQL & data modelling", "weight": 0.15}
+          ],
+          "nice_to_haves": [
+            {"name": "Kafka/event-driven", "weight": 0.05},
+            {"name": "Kubernetes", "weight": 0.05}
+          ],
+          "years_experience_min": 5
+        }
+      },
+      "interview": {
+        "notice_period_weeks": 4,
+        "motivation": "Wants broader architecture ownership and scaling challenges",
+        "location_prefs": "Hybrid; 2-3 days in office",
+        "target_comp": {
+          "base_min": 88000,
+          "base_max": 92000,
+          "currency": "GBP",
+          "period": "year"
+        }
+      },
+      "expected_recommendation": "Proceed",
+      "expected_min_checkmarks": 3,
+      "expected_max_xmarks": 0
+    },
+    {
+      "name": "borderline_many_partial_matches",
+      "description": "Candidate with many △ (partial matches) but few ✔ - borderline Hold case",
+      "cv": {
+        "candidate": {
+          "full_name": "James Mitchell",
+          "email": "j.mitchell@example.com",
+          "location": {
+            "city": "Manchester",
+            "country": "UK",
+            "remote_preference": "hybrid"
+          }
+        },
+        "experience": [
+          {
+            "title": "Full Stack Developer",
+            "employer": "StartupCo",
+            "start_date": "2021-06",
+            "is_current": true,
+            "technologies": ["Python", "Django", "Postgres", "AWS EC2"],
+            "achievements": [
+              "Some exposure to TypeScript in side projects",
+              "Used AWS EC2 but not Lambda or ECS",
+              "Basic SQL queries"
+            ]
+          }
+        ],
+        "skills": [
+          {"name": "Python", "category": "tech", "level": "advanced"},
+          {"name": "Django", "category": "tech", "level": "advanced"},
+          {"name": "PostgreSQL", "category": "tech", "level": "intermediate"},
+          {"name": "AWS", "category": "tech", "level": "beginner"}
+        ]
+      },
+      "jd": {
+        "job": {
+          "title": "Senior Backend Engineer",
+          "client": "TechCorp",
+          "location_policy": "hybrid",
+          "primary_location": {
+            "city": "London",
+            "country": "UK"
+          }
+        },
+        "requirements": {
+          "must_haves": [
+            {"name": "Node.js & TypeScript", "weight": 0.3},
+            {"name": "AWS (Lambda/ECS/RDS)", "weight": 0.25},
+            {"name": "SQL & data modelling", "weight": 0.15}
+          ],
+          "nice_to_haves": [
+            {"name": "Kubernetes", "weight": 0.05}
+          ]
+        }
+      },
+      "interview": {
+        "notice_period_weeks": 2,
+        "motivation": "Wants to transition to Node.js ecosystem",
+        "target_comp": {
+          "base_min": 70000,
+          "base_max": 80000,
+          "currency": "GBP",
+          "period": "year"
+        }
+      },
+      "expected_recommendation": "Hold",
+      "expected_min_triangles": 2,
+      "expected_max_checkmarks": 1
+    },
+    {
+      "name": "weak_match_reject_candidate",
+      "description": "Candidate missing critical must-haves - should recommend Reject",
+      "cv": {
+        "candidate": {
+          "full_name": "Alex Thompson",
+          "email": "alex.t@example.com",
+          "location": {
+            "city": "Birmingham",
+            "country": "UK"
+          }
+        },
+        "experience": [
+          {
+            "title": "Frontend Developer",
+            "employer": "WebAgency",
+            "start_date": "2022-01",
+            "is_current": true,
+            "technologies": ["React", "JavaScript", "HTML", "CSS"],
+            "achievements": [
+              "Built responsive web applications"
+            ]
+          }
+        ],
+        "skills": [
+          {"name": "React", "category": "tech", "level": "advanced"},
+          {"name": "JavaScript", "category": "tech", "level": "advanced"}
+        ]
+      },
+      "jd": {
+        "job": {
+          "title": "Senior Backend Engineer",
+          "client": "BackendCorp",
+          "location_policy": "remote"
+        },
+        "requirements": {
+          "must_haves": [
+            {"name": "Node.js & TypeScript", "weight": 0.4},
+            {"name": "Backend API design", "weight": 0.3},
+            {"name": "Database design", "weight": 0.2}
+          ],
+          "nice_to_haves": []
+        }
+      },
+      "interview": {
+        "notice_period_weeks": 4
+      },
+      "expected_recommendation": "Reject",
+      "expected_min_xmarks": 2,
+      "expected_max_checkmarks": 0
+    },
+    {
+      "name": "strong_but_long_notice",
+      "description": "Perfect candidate but with long notice period - borderline Proceed/Hold",
+      "cv": {
+        "candidate": {
+          "full_name": "Emma Watson",
+          "email": "emma.w@example.com",
+          "location": {
+            "city": "London",
+            "country": "UK"
+          }
+        },
+        "experience": [
+          {
+            "title": "Senior Backend Engineer",
+            "employer": "BigTech",
+            "start_date": "2018-03",
+            "is_current": true,
+            "technologies": ["Node.js", "TypeScript", "Postgres", "AWS ECS", "AWS Lambda", "Kafka"],
+            "achievements": [
+              "Led migration to microservices architecture",
+              "Designed event-driven systems using Kafka",
+              "Managed Kubernetes clusters"
+            ]
+          }
+        ],
+        "skills": [
+          {"name": "Node.js", "category": "tech", "level": "expert"},
+          {"name": "TypeScript", "category": "tech", "level": "expert"},
+          {"name": "AWS", "category": "tech", "level": "expert"},
+          {"name": "Kafka", "category": "tech", "level": "advanced"},
+          {"name": "Kubernetes", "category": "tech", "level": "advanced"}
+        ]
+      },
+      "jd": {
+        "job": {
+          "title": "Senior Backend Engineer",
+          "client": "UrgentHire Ltd",
+          "location_policy": "hybrid",
+          "hiring_urgency": "asap"
+        },
+        "requirements": {
+          "must_haves": [
+            {"name": "Node.js & TypeScript", "weight": 0.3},
+            {"name": "AWS (Lambda/ECS/RDS)", "weight": 0.25},
+            {"name": "SQL & data modelling", "weight": 0.15}
+          ],
+          "nice_to_haves": [
+            {"name": "Kafka/event-driven", "weight": 0.1},
+            {"name": "Kubernetes", "weight": 0.05}
+          ]
+        }
+      },
+      "interview": {
+        "notice_period_weeks": 12,
+        "motivation": "Excited about the role but committed to current project",
+        "target_comp": {
+          "base_min": 95000,
+          "base_max": 100000,
+          "currency": "GBP",
+          "period": "year"
+        }
+      },
+      "expected_recommendation": "Hold",
+      "expected_min_checkmarks": 3,
+      "expected_risks": ["Long notice period (12 weeks) vs urgent hiring need"]
+    },
+    {
+      "name": "salary_out_of_range",
+      "description": "Good candidate but salary expectations above budget - borderline case",
+      "cv": {
+        "candidate": {
+          "full_name": "Michael Brown",
+          "email": "m.brown@example.com",
+          "location": {
+            "city": "London",
+            "country": "UK"
+          }
+        },
+        "experience": [
+          {
+            "title": "Lead Backend Engineer",
+            "employer": "ScaleUp",
+            "start_date": "2019-05",
+            "is_current": true,
+            "technologies": ["Node.js", "TypeScript", "Postgres", "AWS ECS", "AWS Lambda"],
+            "achievements": [
+              "Architected platform handling 1M+ users",
+              "Led team of 8 engineers"
+            ]
+          }
+        ],
+        "skills": [
+          {"name": "Node.js", "category": "tech", "level": "expert"},
+          {"name": "TypeScript", "category": "tech", "level": "expert"},
+          {"name": "AWS", "category": "tech", "level": "expert"}
+        ]
+      },
+      "jd": {
+        "job": {
+          "title": "Senior Backend Engineer",
+          "client": "BudgetCorp",
+          "location_policy": "hybrid",
+          "salary_band": {
+            "min": 75000,
+            "max": 85000,
+            "currency": "GBP",
+            "period": "year"
+          }
+        },
+        "requirements": {
+          "must_haves": [
+            {"name": "Node.js & TypeScript", "weight": 0.3},
+            {"name": "AWS (Lambda/ECS/RDS)", "weight": 0.25}
+          ],
+          "nice_to_haves": []
+        }
+      },
+      "interview": {
+        "notice_period_weeks": 4,
+        "target_comp": {
+          "base_min": 95000,
+          "base_max": 100000,
+          "currency": "GBP",
+          "period": "year"
+        }
+      },
+      "expected_recommendation": "Hold",
+      "expected_min_checkmarks": 2,
+      "expected_risks": ["Salary expectations above budget"]
+    },
+    {
+      "name": "minimal_experience_below_threshold",
+      "description": "Good skills but years of experience below minimum - borderline case",
+      "cv": {
+        "candidate": {
+          "full_name": "Sophie Davis",
+          "email": "sophie.d@example.com",
+          "location": {
+            "city": "Bristol",
+            "country": "UK"
+          }
+        },
+        "experience": [
+          {
+            "title": "Backend Developer",
+            "employer": "Startup",
+            "start_date": "2022-08",
+            "is_current": true,
+            "technologies": ["Node.js", "TypeScript", "Postgres", "AWS Lambda"],
+            "achievements": [
+              "Built microservices from scratch",
+              "Fast learner, completed AWS certification"
+            ]
+          }
+        ],
+        "skills": [
+          {"name": "Node.js", "category": "tech", "level": "advanced"},
+          {"name": "TypeScript", "category": "tech", "level": "advanced"},
+          {"name": "AWS", "category": "tech", "level": "intermediate"}
+        ]
+      },
+      "jd": {
+        "job": {
+          "title": "Senior Backend Engineer",
+          "client": "EnterpriseCo",
+          "location_policy": "hybrid"
+        },
+        "requirements": {
+          "must_haves": [
+            {"name": "Node.js & TypeScript", "weight": 0.3},
+            {"name": "AWS (Lambda/ECS/RDS)", "weight": 0.25}
+          ],
+          "nice_to_haves": [],
+          "years_experience_min": 5
+        }
+      },
+      "interview": {
+        "notice_period_weeks": 2,
+        "motivation": "Eager to grow and take on senior responsibilities"
+      },
+      "expected_recommendation": "Hold",
+      "expected_min_checkmarks": 1,
+      "expected_risks": ["Years of experience below minimum (2.5y vs 5y required)"]
+    }
+  ]
+}
