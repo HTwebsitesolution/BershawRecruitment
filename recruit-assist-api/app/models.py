@@ -152,3 +152,31 @@ class InterviewSnapshot(BaseModel):
 class EndorsementOut(BaseModel):
     endorsement_text: str
 
+# ---------- Tone Profile ----------
+
+class ToneProfile(BaseModel):
+    persona_name: str = "Jean from Bershaw"
+    company: str = "Bershaw"
+    style_markers: list[str] = Field(default_factory=lambda: [
+        "Warm, succinct, professional",
+        "States client value prop in one sentence",
+        "Direct ask for CV",
+        "Uses 'Are you currently exploring?'",
+        "Polite close; no emojis; UK spelling"
+    ])
+    signoff: str = "Best,\nJean"
+    # Short message patterns used by generators:
+    templates: dict[str, str] = Field(default_factory=lambda: {
+        "initial_connect": (
+            "Hi {first_name}, I'm Jean from {company}. I'm recruiting for our client, "
+            "a globally influential technology innovator transforming the insurance industry. "
+            "They're hiring a {role_title} in {location} ({work_mode}). Are you currently exploring? "
+            "If so, can you please send your updated CV?"
+        ),
+        "after_accept_send_jd": (
+            "Sure, {first_name}. Please see the attached JD. I'll wait for your CV. "
+            "How much is your current and expected salary? How long is your notice period?"
+        ),
+        "polite_ack": "Thanks for the quick reply, {first_name}."
+    })
+

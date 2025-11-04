@@ -1,6 +1,23 @@
 from __future__ import annotations
 from typing import List, Tuple, Optional
+from pathlib import Path
 from app.models import CandidateCVNormalized, JobDescriptionNormalized, InterviewSnapshot, EndorsementOut
+from app.services.llm import get_openai
+from app.settings import settings
+
+# Get the path to the prompts directory (at root level, one level up from recruit-assist-api)
+_PROMPT_PATH = Path(__file__).parent.parent.parent.parent / "prompts" / "endorsement_prompt.txt"
+
+
+def _load_prompt_template() -> str:
+    """Load the endorsement prompt template from prompts/endorsement_prompt.txt"""
+    try:
+        with open(_PROMPT_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        # Fallback prompt if file not found (shouldn't happen in production)
+        return "Generate a concise candidate endorsement based on the CV, JD, and interview data provided."
+
 
 def _check(requirement: str, cv: CandidateCVNormalized) -> Tuple[str, str]:
     """Return tuple (mark, evidence) where mark in {'✔','△','✖'} and short evidence."""
@@ -28,6 +45,7 @@ def _check(requirement: str, cv: CandidateCVNormalized) -> Tuple[str, str]:
 
     return "✖", ""
 
+
 def _one_line_background(cv: CandidateCVNormalized) -> str:
     years = ""  # In this stub we don't compute years; keep concise
     exp = cv.experience[0] if cv.experience else None
@@ -37,17 +55,20 @@ def _one_line_background(cv: CandidateCVNormalized) -> str:
         impact = f"; {exp.achievements[0]}"
     return f"{exp.title if exp else 'Professional'}; {techs}{impact}".strip("; ")
 
+
 def _fmt_currency(val: Optional[float], cur: Optional[str]) -> str:
     if val is None or not cur:
         return "Unknown"
     symbol = "£" if cur.upper() == "GBP" else cur.upper() + " "
     return f"{symbol}{int(val):,}"
 
-def write_endorsement(
+
+def _write_endorsement_rule_based(
     cv: CandidateCVNormalized,
     jd: JobDescriptionNormalized,
     interview: InterviewSnapshot
 ) -> EndorsementOut:
+    """Fallback rule-based endorsement writer (original implementation)"""
     name = cv.candidate.full_name
     loc = cv.candidate.location.city + ", " + cv.candidate.location.country if cv.candidate.location and cv.candidate.location.city and cv.candidate.location.country else "Unknown"
     background = _one_line_background(cv)
@@ -98,3 +119,70 @@ def write_endorsement(
         f"Recommendation: {recommendation} — based on evidence above"
     )
     return EndorsementOut(endorsement_text=out)
+
+
+def write_endorsement(
+    cv: CandidateCVNormalized,
+    jd: JobDescriptionNormalized,
+    interview: InterviewSnapshot
+) -> EndorsementOut:
+    """
+    Generate endorsement using LLM if configured, otherwise fallback to rule-based.
+    """
+    # Try to get OpenAI client, fallback to rule-based if not configured
+    try:
+        openai_client = get_openai()
+    except RuntimeError:
+        # API key not configured, use rule-based fallback
+        return _write_endorsement_rule_based(cv, jd, interview)
+
+    try:
+        # Load prompt template
+        prompt_template = _load_prompt_template()
+        
+        # Convert models to JSON for LLM input
+        cv_json = cv.model_dump_json(indent=2, exclude_none=True)
+        jd_json = jd.model_dump_json(indent=2, exclude_none=True)
+        interview_json = interview.model_dump_json(indent=2, exclude_none=True)
+        
+        # Construct the full prompt with inputs
+        user_prompt = f"""{prompt_template}
+
+INPUT DATA:
+
+CandidateCVNormalized JSON:
+```json
+{cv_json}
+```
+
+JobDescriptionNormalized JSON:
+```json
+{jd_json}
+```
+
+Interview JSON:
+```json
+{interview_json}
+```
+
+Generate the endorsement following the format and rules above:"""
+
+        # Call OpenAI API using long model for higher quality endorsements
+        response = openai_client.chat.completions.create(
+            model=settings.openai_model_long,
+            messages=[
+                {"role": "system", "content": "You are a recruitment assistant that produces concise, audit-friendly candidate endorsements."},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.3,  # Lower temperature for more consistent, factual output
+            max_tokens=800,  # Sufficient for ~200 word endorsement
+        )
+        
+        endorsement_text = response.choices[0].message.content.strip()
+        return EndorsementOut(endorsement_text=endorsement_text)
+        
+    except Exception as e:
+        # If LLM call fails, fallback to rule-based
+        # In production, you might want to log this error
+        print(f"Warning: LLM endorsement generation failed: {e}. Falling back to rule-based.")
+        return _write_endorsement_rule_based(cv, jd, interview)

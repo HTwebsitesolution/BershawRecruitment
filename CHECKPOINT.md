@@ -69,11 +69,13 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
    - Or add rule-based parsing
    - Validate against schema
 
-3. **Replace Endorsement Writer with LLM**
-   - Load endorsement prompt template
-   - Integrate OpenAI/Anthropic API
-   - Use few-shot examples from prompt
-   - Maintain evidence requirements
+3. ✅ **Replace Endorsement Writer with LLM** - **COMPLETED**
+   - ✅ Load endorsement prompt template from `prompts/endorsement_prompt.txt`
+   - ✅ Integrate OpenAI API (with fallback to rule-based if API key not set)
+   - ✅ Use few-shot examples from prompt
+   - ✅ Maintain evidence requirements
+   - ✅ Environment variable support (OPENAI_API_KEY, OPENAI_MODEL)
+   - ✅ Automatic fallback to rule-based implementation for testing
 
 ### Priority 2: Integration
 4. **Wire Chrome Extension to Backend**
@@ -167,7 +169,7 @@ npm run build
 
 - **CV Parser**: Currently a stub returning mock data. Replace with real parser.
 - **JD Normalizer**: Currently a stub with defaults. Replace with LLM extraction.
-- **Endorsement Writer**: Currently rule-based. Swap in LLM call using the prompt template.
+- **Endorsement Writer**: ✅ **LLM-based implementation complete!** Uses OpenAI API with automatic fallback to rule-based if `OPENAI_API_KEY` is not set. See `recruit-assist-api/README.md` for environment variable setup.
 - **CORS**: Currently open (`allow_origins=["*"]`). Tighten before production.
 - **Authentication**: Not implemented yet. Add before exposing outside localhost.
 - **Tests**: Test suite covers stubs. Add golden pairs when implementing real parsers.

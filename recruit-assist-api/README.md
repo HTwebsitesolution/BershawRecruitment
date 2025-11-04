@@ -9,6 +9,51 @@ pip install -e ".[dev]"
 uvicorn app.main:app --reload
 ```
 
+### Environment Variables
+
+For LLM-based features, create a `.env` file in the `recruit-assist-api` directory:
+
+```bash
+# Required for LLM features (endorsement generation, outreach personalization)
+OPENAI_API_KEY=YOUR_NEW_ROTATED_KEY_HERE
+```
+
+**Note**: If `OPENAI_API_KEY` is not set, services will automatically fallback to rule-based/template-based implementations for testing purposes.
+
+#### Local Development
+
+```bash
+# Set environment variable
+export OPENAI_API_KEY=YOUR_NEW_ROTATED_KEY_HERE
+
+# Run the server
+uvicorn app.main:app --reload
+```
+
+#### Docker
+
+**Important**: Pass the API key at runtime (don't bake it into the image):
+
+```bash
+# Build the image
+docker build -t recruit-assist-api:dev .
+
+# Run with environment variable
+docker run -p 8000:8000 --env OPENAI_API_KEY=YOUR_NEW_ROTATED_KEY_HERE recruit-assist-api:dev
+```
+
+If using Docker Compose, reference the `.env` file:
+
+```yaml
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+```
+
 ### Running tests
 ```bash
 # From project root

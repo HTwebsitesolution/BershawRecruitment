@@ -1,8 +1,15 @@
 from __future__ import annotations
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import ingest, normalize, endorsement
+from app.routers import ingest, normalize, endorsement, tone, outreach
+
+# Configure logging for intent classification review
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -22,6 +29,8 @@ def create_app() -> FastAPI:
     app.include_router(ingest.router)
     app.include_router(normalize.router)
     app.include_router(endorsement.router)
+    app.include_router(tone.router)
+    app.include_router(outreach.router)
 
     @app.get("/healthz")
     async def health():
