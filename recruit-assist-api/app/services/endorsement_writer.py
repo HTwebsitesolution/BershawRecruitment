@@ -24,23 +24,29 @@ def _check(requirement: str, cv: CandidateCVNormalized) -> Tuple[str, str]:
     req_lower = requirement.lower()
     evidence = ""
 
-    # Naive signal: skills + technologies strings
-    skill_hits = [s.name for s in cv.skills if s.name and s.name.lower() in req_lower]
+    # Naive signal: skills + technologies strings (bidirectional matching)
+    skill_hits = [s.name for s in cv.skills if s.name and (s.name.lower() in req_lower or req_lower in s.name.lower())]
     tech_hits = []
     for exp in cv.experience:
         for t in (exp.technologies or []):
-            if t.lower() in req_lower:
+            if t.lower() in req_lower or req_lower in t.lower():
                 tech_hits.append(t)
 
     if skill_hits or tech_hits:
         evidence = f"{', '.join(skill_hits + tech_hits)}"
         return "✔", evidence
 
-    # partial: if any token overlaps
-    tokens = [w for w in req_lower.replace("(", " ").replace(")", " ").replace("/", " ").split() if len(w) > 2]
-    skill_token_hits = [s.name for s in cv.skills if any(tok in s.name.lower() for tok in tokens)]
-    if skill_token_hits:
-        evidence = f"{', '.join(skill_token_hits)}"
+    # partial: if any token overlaps (bidirectional)
+    tokens = [w for w in req_lower.replace("(", " ").replace(")", " ").replace("/", " ").replace("&", " ").split() if len(w) > 2]
+    skill_token_hits = [s.name for s in cv.skills if any(tok in s.name.lower() or s.name.lower() in tok for tok in tokens)]
+    tech_token_hits = []
+    for exp in cv.experience:
+        for t in (exp.technologies or []):
+            if any(tok in t.lower() or t.lower() in tok for tok in tokens):
+                tech_token_hits.append(t)
+    
+    if skill_token_hits or tech_token_hits:
+        evidence = f"{', '.join(skill_token_hits + tech_token_hits)}"
         return "△", evidence
 
     return "✖", ""
@@ -86,8 +92,10 @@ def _write_endorsement_rule_based(
 
     # Fit checks
     lines: List[str] = []
+    must_have_marks: List[str] = []
     for req in jd.requirements.must_haves[:4]:
         mark, ev = _check(req.name, cv)
+        must_have_marks.append(mark)
         ev_txt = f' (evidence: "{ev}")' if ev else ""
         lines.append(f"- {req.name}: {mark} — {('meets' if mark=='✔' else 'partial' if mark=='△' else 'missing')}{ev_txt}")
     for req in jd.requirements.nice_to_haves[:2]:
@@ -102,10 +110,23 @@ def _write_endorsement_rule_based(
         risks.append("Notice period unknown")
     risks_txt = ", ".join(risks) if risks else "None material"
 
-    # Simple recommendation rule (you will replace with scoring later)
-    marks = [l.split(":")[1].strip().split(" ")[0] for l in lines]  # crude parse
-    proceed_score = marks.count("✔") - marks.count("✖")
-    recommendation = "Proceed" if proceed_score >= 2 else ("Hold" if proceed_score == 1 else "Reject")
+    # Simple recommendation rule: Proceed if all must-haves are met (✔ or △), otherwise use scoring
+    # Count only must-have marks for recommendation (nice-to-haves are optional)
+    # Treat △ (partial matches) as acceptable for must-haves
+    all_must_haves_acceptable = len(must_have_marks) > 0 and all(m in ("✔", "△") for m in must_have_marks)
+    if all_must_haves_acceptable:
+        recommendation = "Proceed"
+    else:
+        # Use scoring for partial matches - only count must-haves for scoring
+        # Count ✔ as +1, △ as +0.5, ✖ as -1
+        must_have_score = must_have_marks.count("✔") + (must_have_marks.count("△") * 0.5) - must_have_marks.count("✖")
+        # If most must-haves are met, proceed; if some are met, hold; if few/none, reject
+        if must_have_score >= len(must_have_marks) * 0.6:  # 60% of must-haves met (allowing △ as partial)
+            recommendation = "Proceed"
+        elif must_have_score >= 0.5:
+            recommendation = "Hold"
+        else:
+            recommendation = "Reject"
 
     out = (
         f"Candidate: {name} — {loc}\n"

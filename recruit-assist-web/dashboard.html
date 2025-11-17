@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Bershaw Recruitment</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">Bershaw Recruitment</div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="#pipeline">Pipeline</a>
+                    <a href="#analytics">Analytics</a>
+                    <a href="#settings">Settings</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="container">
+            <h1>Dashboard</h1>
+            <p>Monitor your recruitment pipeline and candidate engagement</p>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="container dashboard-container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="total-candidates">-</div>
+                    <div class="stat-label">Total Candidates</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📧</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="messages-sent">-</div>
+                    <div class="stat-label">Messages Sent</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="response-rate">-</div>
+                    <div class="stat-label">Response Rate</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="active-roles">-</div>
+                    <div class="stat-label">Active Roles</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="dashboard-grid">
+            <!-- Pipeline Section -->
+            <section id="pipeline" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Candidate Pipeline</h2>
+                    <button class="btn-primary" onclick="refreshPipeline()">Refresh</button>
+                </div>
+                <div class="pipeline-filters">
+                    <select id="status-filter" onchange="filterPipeline()">
+                        <option value="all">All Status</option>
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="responded">Responded</option>
+                        <option value="interview">Interview</option>
+                        <option value="offer">Offer</option>
+                    </select>
+                    <input type="text" id="search-filter" placeholder="Search candidates..." oninput="filterPipeline()">
+                </div>
+                <div class="pipeline-list" id="pipeline-list">
+                    <div class="empty-state">
+                        <p>No candidates in pipeline yet. Start by uploading CVs or connecting with candidates on LinkedIn.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Analytics</h2>
+                    <select id="time-range" onchange="updateAnalytics()">
+                        <option value="7d">Last 7 days</option>
+                        <option value="30d">Last 30 days</option>
+                        <option value="90d">Last 90 days</option>
+                    </select>
+                </div>
+                <div class="analytics-content">
+                    <div class="chart-placeholder">
+                        <h3>Engagement Trends</h3>
+                        <p>Chart visualization will appear here once data is available.</p>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-label">Avg Response Time</div>
+                            <div class="metric-value" id="avg-response-time">-</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Conversion Rate</div>
+                            <div class="metric-value" id="conversion-rate">-</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Top Source</div>
+                            <div class="metric-value" id="top-source">-</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Tools Section -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2>Quick Tools</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card" onclick="openTool('cv-upload')">
+                    <div class="tool-icon">📄</div>
+                    <h3>Upload CV</h3>
+                    <p>Parse and normalize candidate CVs</p>
+                </div>
+                <div class="tool-card" onclick="openTool('jd-normalize')">
+                    <div class="tool-icon">🎯</div>
+                    <h3>Normalize JD</h3>
+                    <p>Extract structured data from job descriptions</p>
+                </div>
+                <div class="tool-card" onclick="openTool('endorsement')">
+                    <div class="tool-icon">✍️</div>
+                    <h3>Generate Endorsement</h3>
+                    <p>Create candidate endorsements</p>
+                </div>
+                <div class="tool-card" onclick="openTool('tone-settings')">
+                    <div class="tool-icon">🎨</div>
+                    <h3>Tone Profile</h3>
+                    <p>Customize your outreach voice</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modal-title">Tool</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
+

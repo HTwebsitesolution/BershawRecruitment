@@ -32,6 +32,42 @@ def create_app() -> FastAPI:
     app.include_router(tone.router)
     app.include_router(outreach.router)
 
+    @app.get("/")
+    async def root():
+        """Root endpoint with API information."""
+        return {
+            "name": "Recruit Assist API",
+            "version": "0.1.0",
+            "description": "AI-powered recruiting platform API for CV parsing, JD normalization, and endorsement generation.",
+            "docs": {
+                "swagger_ui": "/docs",
+                "redoc": "/redoc",
+                "openapi_json": "/openapi.json"
+            },
+            "endpoints": {
+                "health": "/healthz",
+                "ingest": {
+                    "cv_upload": "POST /ingest/cv?use_llm=true"
+                },
+                "normalize": {
+                    "jd": "POST /normalize/jd?use_llm=true"
+                },
+                "endorsement": {
+                    "generate": "POST /endorsement/generate?use_llm=true"
+                },
+                "outreach": {
+                    "draft_connect": "POST /outreach/draft/connect?mode=llm",
+                    "draft_after_accept": "POST /outreach/draft/after-accept",
+                    "route_reply": "POST /outreach/route-reply"
+                },
+                "tone": {
+                    "get": "GET /tone",
+                    "update": "POST /tone"
+                }
+            },
+            "status": "running"
+        }
+
     @app.get("/healthz")
     async def health():
         return {"ok": True}

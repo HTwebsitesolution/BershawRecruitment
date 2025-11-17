@@ -118,3 +118,6 @@ def test_normalize_jd_llm_fallback_no_api_key(monkeypatch):
     # Fallback should still return valid structure (with defaults)
     assert result.job.title  # Should have a default title
     assert result.job.client  # Should have a default client
+
+
+

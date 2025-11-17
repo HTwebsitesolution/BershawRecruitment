@@ -1,6 +1,6 @@
 import pytest
 from app.models import CandidateCVNormalized, JobDescriptionNormalized, InterviewSnapshot
-from app.services.endorsement_writer import write_endorsement
+from app.services.endorsement_writer import write_endorsement, _write_endorsement_rule_based
 
 
 def test_many_partial_matches_vs_few_perfect_matches():
@@ -327,7 +327,8 @@ def test_all_must_haves_met_but_no_nice_to_haves():
     })
     
     interview = InterviewSnapshot()
-    endorsement = write_endorsement(cv, jd, interview)
+    # Use rule-based writer directly to test the logic (not LLM)
+    endorsement = _write_endorsement_rule_based(cv, jd, interview)
     text = endorsement.endorsement_text
     
     # All must-haves met - should recommend Proceed
@@ -544,7 +545,8 @@ def test_recommendation_consistency():
         }
     })
     
-    endorsement = write_endorsement(cv_strong, jd_critical, InterviewSnapshot())
+    # Use rule-based writer directly to test the logic (not LLM)
+    endorsement = _write_endorsement_rule_based(cv_strong, jd_critical, InterviewSnapshot())
     text_strong = endorsement.endorsement_text
     
     # Strong match should recommend Proceed
@@ -552,3 +554,6 @@ def test_recommendation_consistency():
     assert checkmarks_strong >= 2
     assert "Proceed" in text_strong, \
         "Strong match (many ✔) should recommend Proceed"
+
+
+

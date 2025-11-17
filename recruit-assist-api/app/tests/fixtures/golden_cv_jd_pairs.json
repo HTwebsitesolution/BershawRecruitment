@@ -118,7 +118,7 @@
           {"name": "Python", "category": "tech", "level": "advanced"},
           {"name": "Django", "category": "tech", "level": "advanced"},
           {"name": "PostgreSQL", "category": "tech", "level": "intermediate"},
-          {"name": "AWS", "category": "tech", "level": "beginner"}
+          {"name": "AWS", "category": "tech", "level": "novice"}
         ]
       },
       "jd": {
@@ -394,3 +394,6 @@
     }
   ]
 }
+
+
+

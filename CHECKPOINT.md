@@ -28,7 +28,7 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
 
 ### 4. FastAPI Backend
 - ✅ Complete API structure with endpoints:
-  - `POST /ingest/cv` - CV file upload → normalized JSON
+  - `POST /ingest/cv` - CV file upload → normalized JSON (with `?use_llm=true` for LLM extraction from PDF/DOCX)
   - `POST /normalize/jd` - Free-text JD → normalized JSON (with `?use_llm=true` for LLM extraction)
   - `POST /endorsement/generate` - CV + JD + Interview → endorsement (with `?use_llm=true` for LLM generation)
   - `POST /outreach/draft/connect` - Generate connection messages (with `?mode=llm` for LLM personalization)
@@ -36,10 +36,11 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
   - `POST /outreach/next-message` - Generate follow-up messages
 - ✅ Pydantic models mirroring JSON schemas
 - ✅ LLM services:
+  - ✅ `cv_parser_llm.py` - LLM-based CV extraction from PDF/DOCX
   - ✅ `jd_normalizer_llm.py` - LLM-based JD extraction
   - ✅ `endorsement_llm.py` - LLM-based endorsement generation
   - ✅ `outreach_llm.py` - LLM-based outreach personalization
-- ✅ Service stubs (CV parser still stub, JD normalizer has LLM implementation)
+- ✅ Service implementations (CV parser LLM ✅, JD normalizer LLM ✅)
 - ✅ Factory pattern app structure
 - ✅ Centralized OpenAI client (`app/services/llm.py`)
 - ✅ Settings management (`app/settings.py`) with `.env` support
@@ -50,6 +51,7 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
 - ✅ Pytest test suite:
   - `test_models.py` - Model validation tests
   - `test_cv_parser.py` - CV parser stub tests
+  - `test_cv_parser_llm.py` - CV parser LLM tests
   - `test_jd_normalizer.py` - JD normalizer tests
   - `test_jd_normalizer_llm.py` - JD normalizer LLM tests
   - `test_endorsement_writer.py` - Endorsement generation tests
@@ -72,12 +74,15 @@ All backend infrastructure and Chrome extension foundation is complete. Ready fo
 ## 📋 Next Steps (When Returning)
 
 ### Priority 1: Backend Implementation
-1. ❌ **Replace CV Parser Stub** - **REMAINING**
-   - Implement real PDF/DOCX parsing
-   - Add PDF parsing library (pdfplumber/pypdf2)
-   - Add DOCX parsing library (python-docx)
-   - Or implement LLM-based extraction
-   - Validate against CandidateCVNormalized schema
+1. ✅ **Replace CV Parser Stub** - **COMPLETED**
+   - ✅ Implemented LLM-based extraction (`app/services/cv_parser_llm.py`)
+   - ✅ Added PDF parsing library (pdfplumber)
+   - ✅ Added DOCX parsing library (python-docx)
+   - ✅ Uses OpenAI JSON mode for structured extraction
+   - ✅ Supports `?use_llm=true` query parameter in `/ingest/cv` endpoint
+   - ✅ Graceful fallback to stub parser if API key not configured
+   - ✅ Comprehensive tests in `test_cv_parser_llm.py`
+   - ✅ Validates against CandidateCVNormalized schema
 
 2. ✅ **Replace JD Normalizer Stub** - **COMPLETED**
    - ✅ Implemented LLM-based extraction (`app/services/jd_normalizer_llm.py`)
@@ -187,7 +192,7 @@ npm run build
 
 ## 📝 Important Notes
 
-- **CV Parser**: ⚠️ **Still a stub** returning mock data. Replace with real PDF/DOCX parsing or LLM-based extraction.
+- **CV Parser**: ✅ **LLM-based implementation complete!** Use `?use_llm=true` to enable LLM extraction from PDF/DOCX files. Falls back to stub parser if `OPENAI_API_KEY` not set.
 - **JD Normalizer**: ✅ **LLM-based implementation complete!** Use `?use_llm=true` to enable LLM extraction. Falls back to rule-based if `OPENAI_API_KEY` not set.
 - **Endorsement Writer**: ✅ **LLM-based implementation complete!** Use `?use_llm=true` to enable LLM generation. Uses OpenAI API with automatic fallback to rule-based if `OPENAI_API_KEY` is not set. See `recruit-assist-api/README.md` for environment variable setup.
 - **Chrome Extension**: ✅ **Wired to backend API!** Extension calls backend endpoints for message generation. Error handling with fallbacks implemented.
@@ -204,9 +209,9 @@ npm run build
 
 ---
 
-**Last Updated**: November 4, 2025
+**Last Updated**: November 5, 2025
 **Status**: 
-- ✅ Priority 1 (Backend): JD Normalizer LLM ✅, Endorsement Writer LLM ✅, CV Parser ⚠️ (stub remains)
+- ✅ Priority 1 (Backend): CV Parser LLM ✅, JD Normalizer LLM ✅, Endorsement Writer LLM ✅
 - ✅ Priority 2 (Integration): Chrome Extension wired to Backend ✅
 - ✅ Priority 3 (Testing): Golden test data ✅, Borderline case tests ✅
 - ⚠️ Priority 4 (Production): Security/Auth, Infrastructure - Not started
