@@ -1,7 +1,8 @@
 from __future__ import annotations
 import json
 from typing import Optional
-from app.services.llm import get_openai
+from openai import APITimeoutError, APIError
+from app.services.llm import get_openai, handle_llm_timeout_error
 from app.settings import settings
 from app.models import JobDescriptionNormalized
 from app.services.jd_normalizer import normalize_jd
@@ -153,6 +154,9 @@ def normalize_jd_llm(
         # Validate and create Pydantic model
         return JobDescriptionNormalized.model_validate(jd_data)
         
+    except (APITimeoutError, APIError) as e:
+        # LLM API errors - raise LLMError which will be handled by exception handler
+        raise handle_llm_timeout_error(e, "JD normalization")
     except json.JSONDecodeError as e:
         # If JSON parsing fails, fallback to rule-based normalization
         print(f"Warning: LLM returned invalid JSON: {e}. Falling back to rule-based normalization.")
@@ -168,7 +172,11 @@ def normalize_jd_llm(
             currency=currency
         )
     except Exception as e:
-        # If LLM call fails, fallback to rule-based normalization
+        # Check if it's already a handled LLM error
+        from app.exceptions import LLMError
+        if isinstance(e, LLMError):
+            raise
+        # If LLM call fails for other reasons, fallback to rule-based normalization
         print(f"Warning: JD normalization LLM call failed: {e}. Falling back to rule-based normalization.")
         return normalize_jd(
             text=text,

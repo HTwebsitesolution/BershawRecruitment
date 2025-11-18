@@ -1,6 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
-from app.services.llm import get_openai
+from openai import APITimeoutError, APIError
+from app.services.llm import get_openai, handle_llm_timeout_error
 from app.settings import settings
 from app.models import CandidateCVNormalized, JobDescriptionNormalized, InterviewSnapshot, EndorsementOut
 
@@ -70,17 +71,21 @@ Interview JSON:
 
 Generate the endorsement following the format and rules above:"""
 
-    # Call OpenAI API using chat completions
-    resp = client.chat.completions.create(
-        model=settings.openai_model_long,
-        messages=[
-            {"role": "system", "content": ENDORSEMENT_SYSTEM},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=0.3,  # Lower temperature for more consistent, factual output
-        max_tokens=800,  # Sufficient for ~160-220 word endorsement
-    )
-    
-    # Extract the text from the response
-    text = resp.choices[0].message.content.strip()
-    return EndorsementOut(endorsement_text=text)
+    try:
+        # Call OpenAI API using chat completions
+        resp = client.chat.completions.create(
+            model=settings.openai_model_long,
+            messages=[
+                {"role": "system", "content": ENDORSEMENT_SYSTEM},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.3,  # Lower temperature for more consistent, factual output
+            max_tokens=800,  # Sufficient for ~160-220 word endorsement
+        )
+        
+        # Extract the text from the response
+        text = resp.choices[0].message.content.strip()
+        return EndorsementOut(endorsement_text=text)
+    except (APITimeoutError, APIError) as e:
+        # LLM API errors - raise LLMError which will be handled by exception handler
+        raise handle_llm_timeout_error(e, "Endorsement generation")

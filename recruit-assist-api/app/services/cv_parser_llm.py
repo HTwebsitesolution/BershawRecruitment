@@ -5,7 +5,8 @@ from io import BytesIO
 from datetime import datetime
 import pdfplumber
 from docx import Document
-from app.services.llm import get_openai
+from openai import APITimeoutError, APIError
+from app.services.llm import get_openai, handle_llm_timeout_error
 from app.settings import settings
 from app.models import CandidateCVNormalized
 from app.services.cv_parser import parse_cv_bytes_to_normalized
@@ -232,12 +233,20 @@ Return only valid JSON, no markdown formatting or explanation."""
         # Validate and create Pydantic model
         return CandidateCVNormalized.model_validate(cv_data)
         
+    except (APITimeoutError, APIError) as e:
+        # LLM API errors - raise LLMError which will be handled by exception handler
+        raise handle_llm_timeout_error(e, "CV parsing")
     except json.JSONDecodeError as e:
         # If JSON parsing fails, fallback to stub
         print(f"Warning: LLM returned invalid JSON: {e}. Falling back to stub parser.")
         return parse_cv_bytes_to_normalized(data, filename=filename, parser_version=parser_version)
     except Exception as e:
-        # If LLM call fails, fallback to stub
+        # Check if it's already a handled LLM error
+        from app.exceptions import LLMError
+        if isinstance(e, LLMError):
+            raise
+        # If LLM call fails for other reasons, fallback to stub
         print(f"Warning: CV parsing LLM call failed: {e}. Falling back to stub parser.")
         return parse_cv_bytes_to_normalized(data, filename=filename, parser_version=parser_version)
+
 

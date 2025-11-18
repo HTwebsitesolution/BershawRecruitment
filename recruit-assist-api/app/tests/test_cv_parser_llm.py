@@ -230,3 +230,4 @@ def test_parse_cv_bytes_to_normalized_llm_fallback_invalid_json(monkeypatch):
     # Should fall back to stub
     assert result.candidate.full_name
 
+
