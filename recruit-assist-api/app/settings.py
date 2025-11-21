@@ -8,10 +8,12 @@ class Settings(BaseSettings):
     openai_timeout: float = Field(default=60.0, alias="OPENAI_TIMEOUT", description="Timeout for OpenAI API calls in seconds")
     
     # Database settings
+    # Can use SQLite for testing or PostgreSQL for production
     database_url: str = Field(
-        default="postgresql://postgres:postgres@localhost:5432/recruit_assist",
+        default="sqlite:///./recruit_assist.db",  # SQLite for quick testing
+        # default="postgresql://postgres:postgres@localhost:5432/recruit_assist",  # PostgreSQL for production
         alias="DATABASE_URL",
-        description="PostgreSQL database URL"
+        description="Database URL (SQLite or PostgreSQL)"
     )
     debug: bool = Field(default=False, alias="DEBUG", description="Enable debug mode (SQL logging)")
     

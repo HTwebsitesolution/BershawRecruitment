@@ -33,13 +33,27 @@ def get_engine():
     """Get or create database engine."""
     global engine
     if engine is None:
-        engine = create_engine(
-            get_database_url(),
-            pool_pre_ping=True,  # Verify connections before using
-            pool_size=10,  # Connection pool size
-            max_overflow=20,  # Max overflow connections
-            echo=get_debug_mode(),  # Log SQL queries in debug mode
-        )
+        db_url = get_database_url()
+        
+        # SQLite-specific configuration
+        connect_args = {}
+        if db_url.startswith("sqlite"):
+            connect_args = {"check_same_thread": False}
+            # Don't use connection pooling for SQLite
+            engine = create_engine(
+                db_url,
+                connect_args=connect_args,
+                echo=get_debug_mode(),
+            )
+        else:
+            # PostgreSQL configuration
+            engine = create_engine(
+                db_url,
+                pool_pre_ping=True,  # Verify connections before using
+                pool_size=10,  # Connection pool size
+                max_overflow=20,  # Max overflow connections
+                echo=get_debug_mode(),  # Log SQL queries in debug mode
+            )
     return engine
 
 
