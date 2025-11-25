@@ -994,22 +994,39 @@ section, nav, footer {
     color: var(--text-muted);
 }
 
-/* Floating CTA */
-.floating-cta {
+/* Floating CTAs Container */
+.floating-ctas-container {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: 0;
+    left: 0;
+    right: 0;
     z-index: 1000;
+    pointer-events: none;
+}
+
+/* Floating CTA - Center Bottom */
+.floating-cta-center {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    z-index: 1001;
     opacity: 0;
-    transform: translateY(20px);
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
 }
 
-.floating-cta.visible {
+.floating-cta-center.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
     pointer-events: all;
+}
+
+/* Hide floating CTA when near footer */
+@media (min-width: 769px) {
+    .floating-cta-center {
+        bottom: 24px;
+    }
 }
 
 .floating-cta-btn {
@@ -1485,12 +1502,57 @@ section, nav, footer {
     text-align: center;
 }
 
-/* Sticky CTA */
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    z-index: 1001;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+    pointer-events: none;
+}
+
+@media (min-width: 769px) {
+    .back-to-top {
+        bottom: 24px;
+    }
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.back-to-top:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.back-to-top svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Sticky CTA - Left Side */
 .sticky-cta {
     position: fixed;
     bottom: 24px;
     left: 24px;
-    z-index: 999;
+    z-index: 1000;
     opacity: 0;
     transform: translateX(-20px);
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -1671,9 +1733,12 @@ section, nav, footer {
 .footer-bottom {
     text-align: center;
     padding-top: 40px;
+    padding-bottom: 100px;
     border-top: 1px solid var(--border-dark);
     color: var(--text-muted);
     font-size: 14px;
+    position: relative;
+    z-index: 1;
 }
 
 /* Responsive */
@@ -1746,14 +1811,24 @@ section, nav, footer {
         grid-template-columns: 1fr;
     }
 
-    .floating-cta {
-        bottom: 16px;
-        right: 16px;
+    .floating-cta-center {
+        bottom: 80px;
     }
 
     .floating-cta-btn {
         padding: 14px 24px;
         font-size: 14px;
+    }
+
+    .back-to-top {
+        bottom: 80px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .footer-bottom {
+        padding-bottom: 120px;
     }
 
     .sticky-cta {
