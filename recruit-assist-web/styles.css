@@ -6,26 +6,26 @@
 }
 
 :root {
-    --purple-dark: #1a0b2e;
-    --purple-darker: #0d0519;
-    --purple-primary: #6366f1;
-    --purple-light: #818cf8;
-    --purple-accent: #a78bfa;
+    --primary-dark: #0f172a;
+    --primary-darker: #020617;
+    --primary-blue: #2563eb;
+    --primary-blue-light: #3b82f6;
+    --primary-blue-accent: #60a5fa;
     --text-white: #ffffff;
     --text-light: rgba(255, 255, 255, 0.8);
     --text-muted: rgba(255, 255, 255, 0.6);
     --border-dark: rgba(255, 255, 255, 0.1);
-    --grid-pattern: rgba(99, 102, 241, 0.1);
+    --grid-pattern: rgba(37, 99, 235, 0.1);
 }
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: var(--text-white);
     line-height: 1.6;
-    background: var(--purple-dark);
+    background: var(--primary-dark);
     background-image: 
-        linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
     background-size: 50px 50px;
     min-height: 100vh;
 }
@@ -38,7 +38,7 @@ body {
 
 /* Navigation */
 .navbar {
-    background: rgba(26, 11, 46, 0.8);
+    background: rgba(15, 23, 42, 0.8);
     backdrop-filter: blur(20px);
     position: sticky;
     top: 0;
@@ -57,14 +57,12 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-white);
 }
 
-.logo-smile {
-    font-size: 20px;
-    opacity: 0.9;
+.logo-image {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
 }
 
 .nav-links {
@@ -100,19 +98,19 @@ body {
 }
 
 .btn-signup {
-    background: var(--purple-primary);
+    background: var(--primary-blue);
     font-weight: 600;
 }
 
 .btn-signup:hover {
-    background: var(--purple-light);
+    background: var(--primary-blue-light);
     opacity: 1;
 }
 
 /* Hero Section */
 .hero {
     padding: 80px 0 120px;
-    background: var(--purple-dark);
+    background: var(--primary-dark);
 }
 
 .hero-wrapper {
@@ -132,7 +130,7 @@ body {
     gap: 12px;
     margin-bottom: 32px;
     padding: 6px 12px;
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(37, 99, 235, 0.2);
     border-radius: 4px;
     font-size: 13px;
 }
@@ -145,7 +143,7 @@ body {
 }
 
 .news-text {
-    color: var(--purple-light);
+    color: var(--primary-blue-light);
 }
 
 .hero-title {
@@ -169,7 +167,7 @@ body {
     display: inline-block;
     padding: 16px 32px;
     background: var(--text-white);
-    color: var(--purple-dark);
+    color: var(--primary-dark);
     font-weight: 600;
     font-size: 16px;
     border-radius: 8px;
@@ -220,14 +218,14 @@ body {
     aspect-ratio: 9/16;
     border-radius: 12px;
     overflow: hidden;
-    border: 2px solid var(--purple-primary);
+    border: 2px solid var(--primary-blue);
     position: relative;
 }
 
 .video-placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--purple-darker) 0%, var(--purple-dark) 100%);
+    background: linear-gradient(135deg, var(--primary-darker) 0%, var(--primary-dark) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -258,7 +256,7 @@ body {
 /* Features Section */
 .features {
     padding: 120px 0;
-    background: var(--purple-darker);
+    background: var(--primary-darker);
 }
 
 .section-title {
@@ -287,9 +285,9 @@ body {
 
 .feature-card:hover {
     transform: translateY(-4px);
-    border-color: var(--purple-primary);
+    border-color: var(--primary-blue);
     background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
 }
 
 .feature-icon {
@@ -313,7 +311,7 @@ body {
 /* How It Works */
 .how-it-works {
     padding: 120px 0;
-    background: var(--purple-dark);
+    background: var(--primary-dark);
 }
 
 .section-header-dark {
@@ -352,7 +350,7 @@ body {
 
 .step-card:hover {
     transform: translateY(-4px);
-    border-color: var(--purple-primary);
+    border-color: var(--primary-blue);
     background: rgba(255, 255, 255, 0.05);
 }
 
@@ -364,7 +362,7 @@ body {
     position: absolute;
     top: 16px;
     right: 16px;
-    background: var(--purple-primary);
+    background: var(--primary-blue);
     color: white;
     padding: 4px 12px;
     border-radius: 4px;
@@ -378,7 +376,7 @@ body {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: var(--purple-primary);
+    background: var(--primary-blue);
     color: white;
     display: flex;
     align-items: center;
@@ -404,7 +402,7 @@ body {
 /* Talent Intelligence */
 .talent-intelligence {
     padding: 120px 0;
-    background: var(--purple-darker);
+    background: var(--primary-darker);
     text-align: center;
 }
 
@@ -424,7 +422,7 @@ body {
 /* CTA Section */
 .cta-section {
     padding: 100px 0;
-    background: var(--purple-dark);
+    background: var(--primary-dark);
     text-align: center;
 }
 
@@ -438,7 +436,7 @@ body {
 
 /* Footer */
 .footer {
-    background: var(--purple-darker);
+    background: var(--primary-darker);
     color: var(--text-white);
     padding: 80px 0 40px;
     border-top: 1px solid var(--border-dark);
